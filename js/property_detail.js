@@ -1,0 +1,42 @@
+window.addEventListener("load",function(){
+    const search =window.location.search;
+    const params = new URLSearchParams(search);
+    const property_id =params.get('property_id');
+
+var is_interested_image = this.document.getElementsByClassName("is_interested_image")[0];
+is_interested_image.addEventListener("click",function(event){
+var XHR= new XMLHttpRequest();
+XHR.addEventListener("load",toggle_interested_success);
+XHR.addEventListener("error",onerror);
+XHR.open("GET","/api/toggle_interested.php?property_id"+property_id);
+XHR.send();
+document.getElementById("loading").style.display="block";
+event.preventDefault();
+});
+});
+
+var toggle_interested_success=function(event){
+    document.getElementById("loading").style.display="none";
+
+    var response =json.parse(event.target.responseText);
+    if(response.success){
+        var is_interested_image=document.getElementsByClassName("is_interested image")[0];
+            var ineterested_user_count =document.getElementsByClassName("interested_user_count")[0];
+                if(response.is_interested){
+                    is_interested_image.classList.add("fas");
+                    is_interested_image.classList.remove("far");
+                    ineterested_user_count.innerHTML = parseFloat(ineterested_user_count.innerHTML)+1;
+                 } else{
+                    is_interested_image.classList.add("far");
+                    is_interested_image.classList.remove("fas");
+                    ineterested_user_count.innerHTML = parseFloat(ineterested_user_count.innerHTML)-1;
+                 }
+                 }else if(!response.success && !response.is_logged_in){
+                    window.$("#login-modal").modal("show");
+                 }}
+
+
+
+                
+        
+    
